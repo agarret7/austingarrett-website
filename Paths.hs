@@ -2,31 +2,33 @@ module Paths where
 
 import System.FilePath.Posix
 
-rootPath :: String
-rootPath = joinPath ["/", "home", "agarret7", "programming", "web", "haskell-website"]
+-- rootPath :: String
+-- -- rootPath = "~" </> "web_scripts" </> "personal"
+-- rootPath = "/" </> "home" </> "agarret7" </> "programming" </> "web" </> "haskell-website"
 
-backendPath = rootPath </> "backend"
+backendPath :: String -> String
+backendPath rootPath = rootPath </> "backend"
 
-cssPath :: String
-cssPath = backendPath </> "css"
+blogPath :: String -> String
+blogPath rootPath = rootPath </> "blog"
 
-blogPath :: String
-blogPath = rootPath </> "blog"
+resumePath :: String -> String
+resumePath rootPath = rootPath </> "GarrettResume.pdf"
 
-resumePath :: String
-resumePath = rootPath </> "GarrettResume.pdf"
+contactPath :: String -> String
+contactPath rootPath = rootPath </> "contact.html"
 
-contactPath :: String
-contactPath = rootPath </> "contact.html"
+cssPath :: String -> String
+cssPath rootPath = rootPath </> "backend" </> "css"
 
-contentPath :: String
-contentPath = backendPath </> "content"
+jsPath :: String -> String
+jsPath rootPath = backendPath rootPath </> "js"
 
-jsPath :: String
-jsPath = backendPath </> "js"
+mediaPath :: String -> String
+mediaPath rootPath = backendPath rootPath </> "media"
 
-postsPath :: String
-postsPath = contentPath </> "posts"
+contentPath :: String -> String
+contentPath rootPath = backendPath rootPath </> "content"
 
-mediaPath :: String
-mediaPath = backendPath </> "media"
+postsPath :: String -> String
+postsPath rootPath = contentPath rootPath </> "posts"

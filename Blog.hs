@@ -70,8 +70,9 @@ catToUrl c = (catToUrl' c) ++ "_0.html"
 getPostHeader :: Post            -- ^ Post to get title/date/number of comments from.
               -> Bool            -- ^ Whether or not to link to post from title.
               -> (Html -> Html)  -- ^ Header element to surround the thing.
+              -> String          -- ^ Root directory location
               -> Html            -- ^ title/date/number of comments
-getPostHeader post@(Post n p) linked em = em $ do
+getPostHeader post@(Post n p) linked em rootPath = em $ do
   -- Title
   (if linked then
     a ! href (toValue $ (show n) ++ ".html") $ preEscapedToHtml (List.head pLines)
@@ -80,18 +81,22 @@ getPostHeader post@(Post n p) linked em = em $ do
   br
   -- Date and Comments
   subtitle $ do
-    img ! height "10" ! width "10" ! src (toValue $ mediaPath </> "clock.png")
+    img ! height "10" ! width "10" ! src (toValue $ mediaPath rootPath </> "clock.png")
     preEscapedToHtml $ " " ++ (pLines !! 1) ++ " | "
-    img ! height "10" ! width "10" ! src (toValue $ mediaPath </> "speech_bubble.png")
-    a ! href (toValue $ show n ++ ".html#disqus_thread")
-      ! BlazeAttr.content (toValue $ "data-disqus-identifier=" ++ show n) $ " Comments"
+    img ! height "10" ! width "10" ! src (toValue $ mediaPath rootPath </> "speech_bubble.png")
+    " "
+    a ! href (toValue $ disqusUrl n)
+      ! customAttribute "data-disqus-identifier" (toValue $ show n) $
+        "Comments"
   where pLines = lines p
+        disqusUrl n = "http://austingarrett.mit.edu/blog/" ++ show n ++ ".html#disqus_thread"
+
 
 getStub :: Post -> Html
 getStub post@(Post n p) = Blaze.p $ do
 
   -- Title, date, and comments
-  getPostHeader post True h3
+  getPostHeader post True h3 ".."
 
   -- Paragraph preview
   Blaze.p $ do
@@ -127,9 +132,11 @@ blogHeader = h1 ! class_ "raisedbox" $ do
 -- | Generates an aside from a blog.
 aside :: Blog -> Html
 aside b = (Blaze.aside . ul) $ do
+
   li $ h3 "Featured Posts"
   li "Placeholder to be replaced."
   -- TODO: Implement featured posts functionality.
+  -- forM_ (f_posts) (\(Post n p) -> List.head $ lines p)
 
   li $ h3 "Categories"
   forM_ (getCategories b) (\c -> li $ a ! href (toValue $ catToUrl c) $ toHtml ("» " ++ c))
@@ -201,7 +208,7 @@ blogToIndexHtml b = ("index.html", redirect) : [("index_" ++ show n ++ ".html",
     Blog.aside b)
   | (Index n chunkedPosts) <- indices]
   where indices = indexPosts b
-        redirect = script $ preEscapedToHtml $ "window.location.href = \"" ++ blogPath </> "index_" ++ (show $ length indices - 1) ++ ".html" ++ "\""
+        redirect = script $ preEscapedToHtml $ "window.location.href = \"" ++ "." </> "index_" ++ (show $ length indices - 1) ++ ".html" ++ "\""
 
 blogToPostHtml :: Blog -> [(String, Html)]
 blogToPostHtml b = [(show n ++ ".html",
@@ -211,7 +218,7 @@ blogToPostHtml b = [(show n ++ ".html",
           prevTitle = if n > 0 then Just (case reverse b !! ((fromIntegral n :: Int) - 1) of (Post _ p') -> line p' 0) else Nothing
           nextTitle = if n < numPages - 1 then Just (case reverse b !! ((fromIntegral n :: Int) + 1) of (Post _ p') -> line p' 0) else Nothing in
             getPageNavigation (Navigator n (fromIntegral $ length b) "" prevTitle nextTitle)
-    getPostHeader post False h2
+    getPostHeader post False h2 ".."
     mapM_ (Blaze.p . preEscapedToHtml) $ init . tail $ (splitOn "\n\n" p)
 
     -- Share
@@ -223,15 +230,18 @@ blogToPostHtml b = [(show n ++ ".html",
 
     emptyScript ! async "" ! src "https://static.addtoany.com/menu/page.js"
     emptyDiv ! BlazeAttr.id "disqus_thread"
-    script $ preEscapedToHtml disqus_script
+    script (preEscapedToHtml $ disqus_script n)
     noscript $ do
       "Please enable JavaScript to view the"
       a ! href "https://disqus.com/?ref_noscript" $
-        "comments powered by Disqus.")
+        "comments powered by Disqus."
+    emptyScript ! BlazeAttr.id "dsq-count-src"
+                ! src "//austingarrett.disqus.com/count.js"
+                ! async "")
     | post@(Post n p) <- b]
-  where disqus_script = unlines $ [
+  where disqus_script n = unlines $ [
           "var disqus_config = function () {{",
-          "this.page.identifier = \"{post_number}\";",
+          "this.page.identifier = \"" ++ show n ++ "\";",
           "}};",
           "(function() {{ // DON'T EDIT BELOW THIS LINE",
           "var d =document, s = d.createElement('script');",

@@ -14,8 +14,8 @@ import Paths
 import Util
 
 -- Takes the current WebState, and some content, and generates an Html page.
-formatTemplate :: WebState -> Html -> Html
-formatTemplate state content = docTypeHtml $ do
+formatTemplate :: WebState -> Html -> String -> Html
+formatTemplate state content rootPath = docTypeHtml $ do
 
   -- Head Section --
   Blaze.head $ do
@@ -26,7 +26,7 @@ formatTemplate state content = docTypeHtml $ do
     link ! href "https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Sonsie+One"
          ! rel "stylesheet"
          ! type_ "text/css"
-    link ! href (toValue (cssPath </> "style.css"))
+    link ! href (toValue (cssPath rootPath </> "style.css"))
          ! rel "stylesheet"
     emptyScript ! type_ "text/javascript"
                 ! async ""
@@ -44,13 +44,13 @@ formatTemplate state content = docTypeHtml $ do
       let blogString = if state == AtBlog then "active " else "" :: String
       let contactString = if state == AtContact then "active " else "" :: String
 
-      let blogHtml = li $ a ! href (toValue $ blogPath </> "index.html")
+      let blogHtml = li $ a ! href (toValue $ blogPath rootPath </> "index.html")
                             ! class_ (toValue $ blogString ++ mainString) $
                               "Blog"
-      let contactHtml = li $ a ! href (toValue contactPath)
+      let contactHtml = li $ a ! href (toValue $ contactPath rootPath)
                             ! class_ (toValue $ contactString ++ mainString) $
                               "Contact"
-      let resumeHtml = li $ a ! href (toValue resumePath)
+      let resumeHtml = li $ a ! href (toValue $ resumePath rootPath)
                             ! class_ (toValue $ mainString) $
                               "Resume"
 
@@ -67,13 +67,13 @@ formatTemplate state content = docTypeHtml $ do
                "Austin Garrett"
       li $ do
         Blaze.div ! class_ "mobile" $ do
-          img ! src (toValue $ mediaPath </> "menu.png")
+          img ! src (toValue $ mediaPath rootPath </> "menu.png")
               ! onclick "myFunction()"
               ! class_ "dropbtn"
           Blaze.div ! BlazeAttr.id "myDropdown"
                     ! class_ "dropdown-content" $ do
             ul $ titleElements False
-        emptyScript ! src (toValue (jsPath </> "dropdown.js"))
+        emptyScript ! src (toValue (jsPath rootPath </> "dropdown.js"))
       titleElements True
 
   -- Body Section --
@@ -83,5 +83,5 @@ formatTemplate state content = docTypeHtml $ do
       "© Copyright 2017 by Austin Garrett. Powered by "
       a ! href "https://hackage.haskell.org/package/blaze-html" $ "Blaze HTML"
       ". This website is "
-      a ! href "" $ "open source"
+      a ! href "https://github.com/agarret7/austingarrett-website" $ "open source"
       "."
