@@ -1,0 +1,350 @@
+/* || General setup */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 10px;
+  background-color: #a9a9a9;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+
+.raisedbox {
+  padding: 8px;
+  border: 8px outset #999;
+  -webkit-box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+  -moz-box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+}
+
+a {
+  text-decoration: none;
+}
+
+
+a:hover {
+  text-decoration: underline;
+}
+
+smallNav {
+  display: block;
+  font-size: 1.6rem;
+  margin-top: 15px;
+  padding-bottom: 0.5cm;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+h1 a, h2 a, h3 a, smallNav a {
+  color: #2a2a2a;
+}
+
+h1 a:visited, h2 a:visited, h3 a:visited, smallNav a:visited{
+  color: #2a2a2a;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, smallNav a:hover {
+  color: blue;
+  text-decoration: none;
+}
+
+subtitle a {
+  color: #2a2a2a;
+}
+
+nav {
+  width: 100%;
+  position: fixed;
+  top: -10px;
+  z-index: 10
+}
+
+/* || typography */
+
+h1, h2, h3, li {
+  font-family: Helvetica;
+  color: #2a2a2a;
+}
+
+nav li {
+  font-family: Calibri;
+}
+
+h2 subtitle, h3 subtitle {
+  font-size: 1.4rem;
+  color: #a9a9a9;
+}
+
+h1 subtitle {
+  font-size: 1.6rem;
+}
+
+p, aside li, blockquote {
+  font-family: Arial;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+ul {
+  padding: 0;
+}
+
+h1 {
+  font-size: 4rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 3rem;
+  text-align: center;
+}
+
+h3 {
+  font-size: 2.2rem;
+}
+
+p, li, blockquote {
+  font-size: 1.6rem;
+  line-height: 1.4;
+  list-style: none;
+}
+
+/* || header layout */
+
+preview {
+  flex: 4;
+}
+
+preview, article, footer, aside {
+  margin-top: 50px;
+  background-color: white;
+  box-shadow: 2px 2px 15px gray;
+}
+
+aside {
+  width: 25%;
+  padding: 0 1%;
+  max-width: 3in;
+}
+
+article {
+  flex: 1;
+}
+
+aside li {
+  margin-left: 10px;
+  margin_right: 10px;
+}
+
+aside li h3 {
+  margin-bottom: 0px;
+}
+
+aside li a {
+  padding-left: 10px;
+}
+
+preview, article, footer {
+  margin-left: 8%;
+  margin-right: 15px;
+  padding: 0 3%;
+}
+
+footer {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+aside, footer, article {
+  margin-right: 8%;
+}
+
+nav ul {
+  list-style-type: none,
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav li a {
+  float: right;
+  display: block;
+  font-size: 2rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 8px 16px;
+  color: white;
+}
+
+nav li a:hover {
+  text-decoration: none;
+}
+
+nav li a:hover:not(.active):not(.name) {
+  background-color: black;
+}
+
+.name {
+  float: left;
+}
+
+.active {
+  background-color: #00008B;
+}
+
+/* || main layout */
+
+main {
+  display: flex;
+}
+
+nav ul:first-child {
+  padding-left: 8%;
+}
+
+nav ul:last-child {
+  padding-right: 8%;
+}
+
+.mobile {
+  display: none;
+  float: right;
+}
+
+.main {
+  display: inline;
+}
+
+@media screen and (max-width: 8in) {
+  preview, article, footer {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  footer, article{
+    margin-right: 10px;
+  }
+
+  nav ul:first-child {
+    padding-left: 0;
+  }
+
+  nav ul:last-child {
+    padding-right: 0;
+  }
+
+  smallNav a{
+    display: hidden;
+  }
+
+  smallNav a:not(.right):not(.index):after {
+    content: 'Previous Post';
+  }
+
+  smallNav a:not(.left):not(.index):before {
+    content: 'Next Post';
+  }
+
+  aside {
+    display: none;
+  }
+
+  .mobile {
+    display: inline;
+  }
+
+  .main {
+    display: none;
+  }
+}
+
+.dropbtn {
+  background-color: #333;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+
+  /* May God forgive me. */
+  position: absolute;
+  top: 10px;
+  right: 0;
+  height: 27px;
+  width: 30px;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: black;
+  outline: none;
+}
+
+.dropdown-content {
+  width: 100%;
+  left: 0;
+  display: none;
+  position: absolute;
+  background-color: #333;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  top: 54px;
+}
+
+.dropdown-content a {
+  float: left;
+  left: 0;
+  display: block;
+  color: white;
+  word-wrap: normal;
+  padding-right: 100%;
+}
+
+.show {display:block;}
+
+.scalable {
+  overflow: hidden;
+}
+
+.scalable iframe {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.scalable .scalable-content {
+  height: 0;
+  position: relative;
+}
+
+.scalable-16-9 .scalable-content {
+  /* Percentage from 9 divided by 16 for ratio of 16:9. */
+  padding-bottom: 56.25%;
+}
